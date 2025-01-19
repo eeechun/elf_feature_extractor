@@ -1,6 +1,6 @@
-# FCG Extractor
+# Feature Extractor
 
-A Python package for extracting features rom executable files using radare2.
+A Python package for extracting features from executable files using radare2.
 - FCG Extractor:
     Extract function call graphs and the instructions of each function.
 - Opcode Extractor:
