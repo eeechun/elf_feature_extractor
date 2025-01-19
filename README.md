@@ -1,6 +1,10 @@
 # FCG Extractor
 
-A Python package for extracting function call graphs andthe instructions of each function from executable files using radare2.
+A Python package for extracting features rom executable files using radare2.
+- FCG Extractor:
+    Extract function call graphs and the instructions of each function.
+- Opcode Extractor:
+    Extract opcodes and the section name.
 
 ## Installation
 
@@ -26,7 +30,8 @@ if not deps_available:
     exit(1)
 
 # Create feature extractor instance
-extractor = ExtractFeature()
+opcode_extractor = ExtractOpcode()
+fcg_extractor = ExtractFCG()
 
 # Prepare input DataFrame
 df_input = pd.DataFrame({
@@ -34,10 +39,17 @@ df_input = pd.DataFrame({
 })
 
 # Extract features
-extractor.process_features(
-    feature='feature_to_extract',
+opcode_extractor.process_features(
     df_input=df_input,
-    dir_feature='output/features',
+    dir_feature='output/opcode',
+    dir_dataset='samples/dataset',
+    timeout_seconds=300,
+    dir_log='logs'
+)
+
+fcg_extractor.process_features(
+    df_input=df_input,
+    dir_feature='output/fcg',
     dir_dataset='samples/dataset',
     timeout_seconds=300,
     dir_log='logs'
@@ -46,7 +58,7 @@ extractor.process_features(
 
 ## Features
 
-- Extracts features (function call graphs & opcodes) from both standard ELF files and compressed/packed executables
+- Extracts function call graphs or opcodes from both standard ELF files and compressed/packed executables
 - Handles timeouts gracefully
 - Parallel processing for better performance
 - Comprehensive logging
