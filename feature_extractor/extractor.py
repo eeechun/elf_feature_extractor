@@ -25,7 +25,7 @@ class ElfAddresses:
 @dataclass
 class Opcode:
     """Data class for storing opcode information"""
-    addr: int
+    addr: str
     opcode: str
     section_name: str
 
@@ -170,6 +170,11 @@ class ExtractFCG:
                 continue
 
             address, name = match.groups()
+            address = address[2:]
+            while address[0] == '0':
+                address = address[1:]
+            address = '0x' + address
+
             functions_info[address] = {
                 "function_name": name,
                 "instructions": []
@@ -383,7 +388,7 @@ class ExtractOpcode:
                     if instructions:
                         list_opcodes.extend([
                             Opcode(
-                                addr=instr['offset'],
+                                addr=hex(instr['offset']),
                                 opcode=instr['opcode'].split()[0] if 'opcode' in instr else '',
                                 section_name=section['name']
                             ).__dict__
@@ -403,7 +408,7 @@ class ExtractOpcode:
             if instructions:
                 list_opcodes.extend([
                     Opcode(
-                        addr=instr['offset'],
+                        addr=hex(instr['offset']),
                         opcode=opcode,
                         section_name='.compressed_data'
                     ).__dict__
@@ -418,7 +423,7 @@ class ExtractOpcode:
             if instructions:
                 list_opcodes.extend([
                     Opcode(
-                        addr=instr['offset'],
+                        addr=hex(int(instr['offset'], 16)),
                         opcode=opcode,
                         section_name='.loader'
                     ).__dict__
