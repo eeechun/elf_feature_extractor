@@ -85,7 +85,7 @@ class ExtractFCG:
             # Determine input path based on label
             path_input = os.path.join(
                 dir_dataset,
-                str_filename[:2],
+                #str_filename[:2],
                 str_filename
             )
 
