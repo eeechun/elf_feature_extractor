@@ -67,8 +67,8 @@ class ExtractFCG:
         for _, row in df_input.iterrows():
             str_filename = row['file_name']
             dir_out = ''
-            dir_out = os.path.join(dir_feature, str_filename[:2])
-            dir_out = os.path.join(dir_out, str_filename)
+            #dir_out = os.path.join(dir_feature, str_filename[:2])
+            dir_out = os.path.join(dir_feature, str_filename)
             os.makedirs(dir_out, exist_ok=True)
 
             # Create output filename
@@ -85,7 +85,7 @@ class ExtractFCG:
             # Determine input path based on label
             path_input = os.path.join(
                 dir_dataset,
-                #str_filename[:2],
+                # str_filename[:2],
                 str_filename
             )
 
@@ -316,7 +316,7 @@ class ExtractOpcode:
             # Determine input path based on label
             path_input = os.path.join(
                 dir_dataset,
-                str_filename[:2],
+                # str_filename[:2],
                 str_filename
             )
 
