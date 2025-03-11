@@ -78,7 +78,7 @@ class ExtractFCG:
             json_output = os.path.join(dir_out, json_file)
 
             # Skip if output file already exists
-            if os.path.exists(dot_file) and os.path.exists(json_file):
+            if os.path.exists(dot_output) and os.path.exists(json_output):
                 self.logger.info(f"File already exists: {dot_file[:-4]}")
                 continue
 
@@ -170,10 +170,11 @@ class ExtractFCG:
                 continue
 
             address, name = match.groups()
-            address = address[2:]
-            while address[0] == '0':
-                address = address[1:]
-            address = '0x' + address
+            if address != '0x00000000':
+                address = address[2:]
+                while address[0] == '0':
+                    address = address[1:]
+                address = '0x' + address
 
             functions_info[address] = {
                 "function_name": name,
@@ -262,7 +263,7 @@ class ExtractFCG:
         except ValueError as ve:
             self.logger.error(str(ve))
         except Exception as e:
-            self.logger.exception(f"Unexpected error occurred: {e}")
+            self.logger.exception(f"{str_filename}: Unexpected error occurred: {e}")
 
         return 0
 
@@ -388,7 +389,7 @@ class ExtractOpcode:
                     if instructions:
                         list_opcodes.extend([
                             Opcode(
-                                addr=hex(instr['offset']),
+                                addr=hex(int(str(instr['offset']), 16)),
                                 opcode=instr['opcode'].split()[0] if 'opcode' in instr else '',
                                 section_name=section['name']
                             ).__dict__
@@ -408,7 +409,7 @@ class ExtractOpcode:
             if instructions:
                 list_opcodes.extend([
                     Opcode(
-                        addr=hex(instr['offset']),
+                        addr=hex(int(str(instr['offset']), 16)),
                         opcode=opcode,
                         section_name='.compressed_data'
                     ).__dict__
@@ -423,12 +424,12 @@ class ExtractOpcode:
             if instructions:
                 list_opcodes.extend([
                     Opcode(
-                        addr=hex(int(instr['offset'], 16)),
+                        addr=hex(int(str(instr['offset']), 16)),
                         opcode=opcode,
                         section_name='.loader'
                     ).__dict__
                     for instr in instructions
-                    if (opcode := self._parse_disasm_line(instr['text']))
+                    if isinstance(instr['offset'], (str, int)) and (opcode := self._parse_disasm_line(instr['text']))
                 ])
 
         r2.quit()
@@ -501,7 +502,7 @@ class ExtractOpcode:
         except ValueError as ve:
             self.logger.error(str(ve))
         except Exception as e:
-            self.logger.exception(f"Unexpected error occurred: {e}")
+            self.logger.exception(f"{str_filename}: Unexpected error occurred: {e}")
 
         return 0
 
